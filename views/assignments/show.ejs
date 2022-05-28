@@ -1,0 +1,93 @@
+<% layout('layouts/boilerplate')%>
+
+    <div class="col">
+        <div class="col-12">
+            <div class="card mb-3 ">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%=assignment.author.username%>
+                    </h5>
+                    <div class="mb-3">
+                    <pre>
+                        <p class="card-text">Instructions: <%= assignment.body %></p>
+                    </pre>
+                    </div>
+                    <div class="mb-3">
+                        <p class="card-text">Attachments: </p>
+                    </div>
+                    <div class="mb-3">
+                        <% assignment.files.forEach(function(img, i) { %>
+                            <!--<img src="<%=img.thumbnail %>" class="img-thumbnail" alt="">-->
+                            <a href="<%=img.url.substr(0, 50)+" fl_attachment/"+img.filename%>"><%=img.filename%>
+                                    </a><br>
+                            <% })%>
+                    </div>
+                    <% if(currentUser && (currentUser.role === 'student')) {%>
+                    <div class="mb-3">
+                        <p class="card-text">Submission: </p>
+                    </div>
+                    <form action="/classrooms/<%=classroom._id%>/assignments/<%=assignment._id%>" method="POST" class="mb-3 validated-form" novalidate enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <div class="form-file custom-file">
+                                <input type="file" class="form-file-input" id="image" name="image" multiple>
+                                <label class="form-file-label" for="image">
+                                    <span class="form-file-text custom-file-label">Choose attachments</span>
+                                    <span class="form-file-button">Browse</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button class="btn btn-success"><i class="fa fa-upload"> Submit</i></button>
+                    </form>
+                    <% } %>
+                    <!--
+                    <% if( currentUser && assignment.author.equals(currentUser._id)) {%>
+                        <form action="/classrooms/<%=classroom._id%>/announcements/<%=assignment._id%>?_method=DELETE"
+                            method="POST">
+                            <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                        </form>
+                    <% } %>
+                    -->
+                </div>
+            </div>
+            <% if(currentUser && (currentUser.role === 'student')) {%>            
+                <% for(let submission of assignment.submissions.reverse()) { %>
+                    <% if(currentUser && (submission.author.equals(currentUser._id))) {%>
+                    <div class="card mb-3 ">
+                        <div class="card-body">
+                            <h5 class="card-title"> <%= submission.author.username%></h5>
+                            <div class="mb-3">
+                                <p class="card-text">Attachments: </p>
+                            </div>
+                            <div class="mb-3">    
+                            <% submission.files.forEach(function(img, i) {  %>
+                                <!--<img src="<%=img.thumbnail %>" class="img-thumbnail" alt="">-->
+                                <a href="<%=img.url.substr(0, 50)+"fl_attachment/"+img.filename%>"><%=img.filename%></a><br>
+                            <% })%>
+                            </div>
+                            <a class="card-link btn btn-secondary" href="/classrooms/submissions/<%=submission._id%>/copyleaks/completed">Check plagiarism</a>
+                        </div>
+                    </div>
+                    <% } %>
+                <% } %>
+            <% } %>
+            <% if(currentUser && (currentUser.role === 'teacher')) {%>            
+            <% for(let submission of assignment.submissions.reverse()) { %>
+                <div class="card mb-3 ">
+                    <div class="card-body">
+                        <h5 class="card-title"> <%= submission.author.username%></h5>
+                        <div class="mb-3">
+                            <p class="card-text">Attachments: </p>
+                        </div>
+                        <div class="mb-3">    
+                        <% submission.files.forEach(function(img, i) {  %>
+                            <!--<img src="<%=img.thumbnail %>" class="img-thumbnail" alt="">-->
+                            <a href="<%=img.url.substr(0, 50)+"fl_attachment/"+img.filename%>"><%=img.filename%></a><br>
+                        <% })%>
+                        </div>
+                        <a class="card-link btn btn-secondary" href="/classrooms/submissions/<%=submission._id%>/copyleaks/completed">Check plagiarism</a>
+                    </div>
+                </div>
+            <% } %>
+            <% } %>
+        </div>
+    </div>

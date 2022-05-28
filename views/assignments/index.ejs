@@ -1,0 +1,60 @@
+<% layout('layouts/boilerplate')%>
+
+    <div class="col">
+        <div class="col-12">
+            <% if(currentUser && (currentUser.role==='teacher')){ %>
+                <h2>Create Assignment</h2>
+                <form action="/classrooms/<%=classroom._id%>/assignments" method="POST" class="mb-3 validated-form" novalidate enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label" for="body">Instructions</label>
+                        <textarea class="form-control" name="assignment[body]" id="body" cols="30" rows="3"
+                            required></textarea>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-file custom-file">
+                            <input type="file" class="form-file-input" id="image" name="image" multiple>
+                            <label class="form-file-label" for="image">
+                                <span class="form-file-text custom-file-label">Choose attachments</span>
+                                <span class="form-file-button">Browse</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button class="btn btn-success"><i class="fa fa-upload"> Submit</i></button>
+                </form>
+            <% } %>
+            <% for(let assignment of classroom.assignments.reverse()) { %>
+                <div class="card mb-3 ">
+                    <div class="card-body">
+                        <h5 class="card-title"> <%= assignment.author.username%></h5>
+                        <div class="mb-3">
+                            <pre>
+                                <p class="card-text">Instructions: <%= assignment.body %></p>
+                            </pre>
+                        </div>
+                        <div class="mb-3">
+                            <p class="card-text">Attachments: </p>
+                        </div>
+                        <div class="mb-3">    
+                        <% assignment.files.forEach(function(img, i) {  %>
+
+                            <a href="<%=img.url.substr(0, 50)+"fl_attachment/"+img.filename%>"><%=img.filename%></a><br>
+                        <% })%>
+                        </div>
+                        <div class="mb-3">
+                            <a class="btn btn-primary" href="/classrooms/<%=classroom._id%>/assignments/<%=assignment._id%>">Open</a>
+                        </div> 
+                        <!--
+                        <%  if( currentUser && assignment.author.equals(currentUser._id))  {%>
+                        <form action="/classrooms/<%=classroom._id%>/announcements/<%=assignment._id%>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                        </form>
+                        <% } %>
+                        -->
+                    </div>
+                </div>
+                <% } %>
+        </div>
+    </div>

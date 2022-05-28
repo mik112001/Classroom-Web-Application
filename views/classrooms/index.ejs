@@ -1,0 +1,15 @@
+<% layout('layouts/boilerplate')%>
+
+<h1>All Classrooms</h1>
+<% for (let classroom of classrooms){%>
+<div class="card text-white bg-dark mb-3 mr-3" style="width: 18rem; display: inline-block;" m>
+    <img class="img-fluid" alt="" src="<%=classroom.images[0].url%>">
+    <div class="card-body">
+      <h5 class="card-title"><%= classroom.title %></h5>
+      <p class="card-text"><small class="text-muted"><%= classroom.description %></small></p>
+      <div class="d-grid gap-2">
+        <a class="btn btn-primary" href="/classrooms/<%=classroom._id%>">Open</a>
+      </div>  
+    </div>
+</div>
+<% }%>
